@@ -30,13 +30,14 @@ public class SongEditFragment extends Fragment {
     private Song mItem;
     private static DataProvider dp; //= DataProvider.getInstance();
     private static SongDetailFragment Detail;
+    private Fragment frag = this;
 
 
     public static Fragment NewInstance(int songId, SongDetailFragment detail) {
         Bundle arguments = new Bundle();
         Fragment editFrag = new SongEditFragment();
+        arguments.putInt("current_song_id", songId);
         editFrag.setArguments(arguments);
-        editFrag.getArguments().putInt("current_song_id", songId);
         Detail = detail;
         dp = DataProvider.getInstance();
         return editFrag;
@@ -72,7 +73,7 @@ public class SongEditFragment extends Fragment {
 
         // Show the content.
         if (mItem != null) {
-            ((ImageView) rootView.findViewById(R.id.album_image)).setImageResource(mItem.getImg());
+            //((ImageView) rootView.findViewById(R.id.album_image)).setImageResource(mItem.getImg());
             final EditText artist = ((EditText) rootView.findViewById(R.id.edittext_album_artist));
             final EditText title = ((EditText) rootView.findViewById(R.id.edittext_song_title));
             final EditText genre = ((EditText) rootView.findViewById(R.id.edittext_data_genre));
@@ -102,6 +103,7 @@ public class SongEditFragment extends Fragment {
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                	getFragmentManager().beginTransaction().remove(frag).commit();
                     getFragmentManager().beginTransaction()
                             .replace(android.R.id.content, Detail)
                             .commit();

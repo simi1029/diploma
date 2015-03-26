@@ -2,6 +2,7 @@ package hu.ppke.simda.musiclibraryandroidonly;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -37,16 +38,11 @@ public class SongDetailActivity extends Activity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(SongDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(SongDetailFragment.ARG_ITEM_ID));
-
-            int index = getIntent().getExtras().getInt("current_song_id", 0);
+        	int index = getIntent().getExtras().getInt("current_song_id");
             Fragment fragment = SongDetailFragment.NewInstance(index);
-            fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.song_detail_container, fragment)
-                    .commit();
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            trans.add(R.id.song_detail_container, fragment);
+            trans.commit();
         }
     }
 

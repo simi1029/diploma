@@ -23,7 +23,7 @@ public class SongDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_ID = "current_song_id";
 
     /**
      * The content this fragment is presenting.
@@ -41,8 +41,8 @@ public class SongDetailFragment extends Fragment {
     public static Fragment NewInstance(int songId) {
         Bundle arguments = new Bundle();
         Fragment detailsFrag = new SongDetailFragment();
+        arguments.putInt("current_song_id", songId);
         detailsFrag.setArguments(arguments);
-        detailsFrag.getArguments().putInt("current_song_id", songId);
         return detailsFrag;
     }
 

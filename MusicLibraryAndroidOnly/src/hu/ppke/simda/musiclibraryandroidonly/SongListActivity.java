@@ -2,6 +2,7 @@ package hu.ppke.simda.musiclibraryandroidonly;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -67,9 +68,10 @@ public class SongListActivity extends Activity
             arguments.putInt(SongDetailFragment.ARG_ITEM_ID, id);
             Fragment fragment = new SongDetailFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.song_detail_container, fragment)
-                    .commit();
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            trans.replace(R.id.song_detail_container, fragment);
+            trans.addToBackStack(null);
+            trans.commit();
 
         } else {
             // In single-pane mode, simply start the detail activity
