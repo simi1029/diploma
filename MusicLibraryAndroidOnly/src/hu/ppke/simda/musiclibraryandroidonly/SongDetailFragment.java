@@ -1,6 +1,8 @@
 package hu.ppke.simda.musiclibraryandroidonly;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import hu.ppke.simda.musiclibraryandroidonly.modell.DataProvider;
 import hu.ppke.simda.musiclibraryandroidonly.modell.Song;
 
@@ -35,8 +36,8 @@ public class SongDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    //public SongDetailFragment() {
-    //}
+    public SongDetailFragment() {
+    }
 
     public static Fragment NewInstance(int songId) {
         Bundle arguments = new Bundle();
@@ -54,7 +55,7 @@ public class SongDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = dp.getSongs().get(getArguments().getInt(ARG_ITEM_ID));
+            mItem = dp.getSongs().get(ShowSongId()/*getArguments().getInt(ARG_ITEM_ID)*/);
         }
     }
 
@@ -87,9 +88,11 @@ public class SongDetailFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Fragment edit = SongEditFragment.NewInstance(ShowSongId(), detail);
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.song_detail_container, edit)
-                            .commit();
+                    FragmentManager manager = getFragmentManager();
+                    FragmentTransaction trans = manager.beginTransaction();
+                    trans.replace(R.id.song_detail_container, edit);
+                    trans.addToBackStack("detail");
+                    trans.commit();
                 }
             });
         }

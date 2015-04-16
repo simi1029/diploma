@@ -3,13 +3,13 @@ package hu.ppke.simda.musiclibraryandroidonly;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import hu.ppke.simda.musiclibraryandroidonly.modell.DataProvider;
 import hu.ppke.simda.musiclibraryandroidonly.modell.Song;
 
@@ -28,9 +28,15 @@ public class SongEditFragment extends Fragment {
      * The content this fragment is presenting.
      */
     private Song mItem;
-    private static DataProvider dp; //= DataProvider.getInstance();
-    private static SongDetailFragment Detail;
-    private Fragment frag = this;
+    private static DataProvider dp = DataProvider.getInstance();
+    //private static SongDetailFragment Detail;
+    
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public SongEditFragment() {
+    }
 
 
     public static Fragment NewInstance(int songId, SongDetailFragment detail) {
@@ -38,8 +44,8 @@ public class SongEditFragment extends Fragment {
         Fragment editFrag = new SongEditFragment();
         arguments.putInt("current_song_id", songId);
         editFrag.setArguments(arguments);
-        Detail = detail;
-        dp = DataProvider.getInstance();
+        //Detail = detail;
+        //dp = DataProvider.getInstance();
         return editFrag;
     }
 
@@ -52,6 +58,7 @@ public class SongEditFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mItem = dp.getSongs().get(ShowSongId());
+            Log.w("CurrentItem", mItem.getArtist());
         }
     }
 
@@ -73,7 +80,7 @@ public class SongEditFragment extends Fragment {
 
         // Show the content.
         if (mItem != null) {
-            //((ImageView) rootView.findViewById(R.id.album_image)).setImageResource(mItem.getImg());
+            final ImageView img = ((ImageView) rootView.findViewById(R.id.album_image));
             final EditText artist = ((EditText) rootView.findViewById(R.id.edittext_album_artist));
             final EditText title = ((EditText) rootView.findViewById(R.id.edittext_song_title));
             final EditText genre = ((EditText) rootView.findViewById(R.id.edittext_data_genre));
@@ -81,6 +88,8 @@ public class SongEditFragment extends Fragment {
             final EditText length = ((EditText) rootView.findViewById(R.id.edittext_data_length));
             final EditText comment = ((EditText) rootView.findViewById(R.id.edittext_data_comment));
 
+            //TODO null pointer exception cause?
+            //img.setImageResource(mItem.getImg());
             artist.setText(mItem.getArtist());
             title.setText(mItem.getTitle());
             genre.setText(mItem.getGenre());
@@ -93,9 +102,9 @@ public class SongEditFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     mItem.modify(artist.getText().toString(), title.getText().toString(), length.getText().toString(), genre.getText().toString(), date.getText().toString(), comment.getText().toString());
-                    getFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, Detail)
-                            .commit();
+                    getFragmentManager().popBackStack();//.beginTransaction()
+                            //.replace(android.R.id.content, Detail)
+                            //.commit();
                 }
             });
 
@@ -103,10 +112,9 @@ public class SongEditFragment extends Fragment {
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                	getFragmentManager().beginTransaction().remove(frag).commit();
-                    getFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, Detail)
-                            .commit();
+                    getFragmentManager().popBackStack();//beginTransaction()
+                            //.replace(android.R.id.content, Detail)
+                            //.commit();
                 }
             });
         }

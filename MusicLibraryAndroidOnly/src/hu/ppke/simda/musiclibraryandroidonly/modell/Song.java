@@ -1,7 +1,7 @@
 package hu.ppke.simda.musiclibraryandroidonly.modell;
 
 /**
- * Created by David on 2015.03.04..
+ * Created by simda on 2015.03.04..
  */
 public class Song {
     private int img;

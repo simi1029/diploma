@@ -5,6 +5,9 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 
 /**
@@ -53,6 +56,22 @@ public class SongListActivity extends Activity
 
         // TODO: If exposing deep links into your app, handle intents here.
     }
+    
+    public boolean onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    	inflater.inflate(R.menu.main_actionbar_items, menu);
+		return super.onCreateOptionsMenu(menu);
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.main_actionbar_menu_add_song:
+    		FragmentTransaction trans = getFragmentManager().beginTransaction();
+    		AddSongDialogFragment dialogFragment = new AddSongDialogFragment();
+    		dialogFragment.show(trans, "dialog_fragment");
+    		return true;
+    	}
+    	return super.onOptionsItemSelected(item);
+    };
 
     /**
      * Callback method from {@link SongListFragment.Callbacks}
