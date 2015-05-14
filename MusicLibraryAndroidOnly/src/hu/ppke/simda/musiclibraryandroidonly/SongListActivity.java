@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowId;
 
 
 /**
@@ -38,6 +40,9 @@ public class SongListActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        
         setContentView(R.layout.activity_song_list);
 
         if (findViewById(R.id.song_detail_container) != null) {
@@ -57,9 +62,9 @@ public class SongListActivity extends Activity
         // TODO: If exposing deep links into your app, handle intents here.
     }
     
-    public boolean onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    	inflater.inflate(R.menu.main_actionbar_items, menu);
-		return super.onCreateOptionsMenu(menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.main_actionbar_items, menu);
+		return true;
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {
