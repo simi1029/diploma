@@ -32,8 +32,7 @@ public class SongListActivity extends Activity
         implements SongListFragment.Callbacks {
 
     /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
     private boolean mTwoPane;
 
@@ -58,8 +57,6 @@ public class SongListActivity extends Activity
                     .findFragmentById(R.id.song_list))
                     .setActivateOnItemClick(true);
         }
-
-        // TODO: If exposing deep links into your app, handle intents here.
     }
     
     public boolean onCreateOptionsMenu(Menu menu) {

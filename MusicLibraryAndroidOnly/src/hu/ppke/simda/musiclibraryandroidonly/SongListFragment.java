@@ -36,8 +36,7 @@ public class SongListFragment extends ListFragment implements OnItemLongClickLis
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
     /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
+     * The fragment's current callback object, which is notified of list item clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -93,14 +92,10 @@ public class SongListFragment extends ListFragment implements OnItemLongClickLis
 				songs.removeAll(toDelete);
 
 				adapter.clearChoices();
-				//ListAdapter.Dispose ();
 				setListAdapter(new SongListAdapter (getActivity(), dp.getSongs()));
 
 				actionModePosition = -1;
-
 				mode.finish();
-
-				//Toast.MakeText(Activity, String.Format("{0} deleted.", song.Title), ToastLength.Short).Show();
 
 				return true;
 			}

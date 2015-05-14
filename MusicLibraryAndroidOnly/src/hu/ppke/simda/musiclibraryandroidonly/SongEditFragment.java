@@ -19,8 +19,7 @@ import hu.ppke.simda.musiclibraryandroidonly.modell.Song;
  */
 public class SongEditFragment extends Fragment {
     /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
+     * The fragment argument representing the item ID that this fragment represents.
      */
     public static final String ARG_ITEM_ID = "current_song_id";
 
@@ -44,8 +43,6 @@ public class SongEditFragment extends Fragment {
         Fragment editFrag = new SongEditFragment();
         arguments.putInt("current_song_id", songId);
         editFrag.setArguments(arguments);
-        //Detail = detail;
-        //dp = DataProvider.getInstance();
         return editFrag;
     }
 
@@ -54,9 +51,6 @@ public class SongEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
             mItem = dp.getSongs().get(ShowSongId());
             Log.w("CurrentItem", mItem.getArtist());
         }
@@ -75,9 +69,7 @@ public class SongEditFragment extends Fragment {
         }
 
         View rootView = inflater.inflate(R.layout.fragment_song_edit, container, false);
-        //mItem = dp.getSongs().get(getArguments().getInt(ARG_ITEM_ID));
-        //Toast.makeText(getActivity(), mItem.toString(), Toast.LENGTH_SHORT).show();
-
+        
         // Show the content.
         if (mItem != null) {
             final ImageView img = ((ImageView) rootView.findViewById(R.id.album_image));
@@ -102,9 +94,7 @@ public class SongEditFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     mItem.modify(artist.getText().toString(), title.getText().toString(), length.getText().toString(), genre.getText().toString(), date.getText().toString(), comment.getText().toString());
-                    getFragmentManager().popBackStack();//.beginTransaction()
-                            //.replace(android.R.id.content, Detail)
-                            //.commit();
+                    getFragmentManager().popBackStack();
                 }
             });
 
@@ -112,9 +102,7 @@ public class SongEditFragment extends Fragment {
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getFragmentManager().popBackStack();//beginTransaction()
-                            //.replace(android.R.id.content, Detail)
-                            //.commit();
+                    getFragmentManager().popBackStack();
                 }
             });
         }
