@@ -90,11 +90,11 @@ public class SongListAdapter extends BaseAdapter {
     }
 
     public void setViewAsOpened(View v) {
-        v.setBackgroundColor(Color.RED);
+        v.setBackgroundColor(Color.rgb(10,180,240));
     }
 
     public void setViewAsChosen(View v) {
-        v.setBackgroundColor(Color.GREEN);
+        v.setBackgroundColor(Color.rgb(235,120,80));
     }
 
     @Override

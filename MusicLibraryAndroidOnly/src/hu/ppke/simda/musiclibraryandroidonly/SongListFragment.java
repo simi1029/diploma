@@ -1,11 +1,22 @@
 package hu.ppke.simda.musiclibraryandroidonly;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import hu.ppke.simda.musiclibraryandroidonly.modell.DataProvider;
+import hu.ppke.simda.musiclibraryandroidonly.modell.Song;
 
 /**
  * A list fragment representing a list of Songs. This fragment
@@ -16,7 +27,7 @@ import hu.ppke.simda.musiclibraryandroidonly.modell.DataProvider;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class SongListFragment extends ListFragment {
+public class SongListFragment extends ListFragment implements OnItemLongClickListener {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -34,6 +45,69 @@ public class SongListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
+    
+    private SongListAdapter mAdapter;
+	private ActionMode mActionMode;
+	int actionModePosition = -1;
+    
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// Do Nothing
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			/*
+			 * Whenever the action mode is dismissed, clear all chosen items
+			 */
+			mAdapter.clearChoices();
+			mAdapter.notifyDataSetChanged();
+			mActionMode = null;
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			if (mActionMode != null)
+				return false;
+			mActionMode = mode;
+			mode.getMenuInflater().inflate(R.menu.action_mode_delete_items, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			if (item.getItemId() == R.id.action_mode_delete_items) {
+				if (actionModePosition == -1)
+					return false;
+
+				SongListAdapter adapter = (SongListAdapter) getListAdapter();
+				List<Song> songs = dp.getSongs ();
+				Set<Integer> chosenItems = adapter.getChosenItems ();
+
+				List<Song> toDelete = new ArrayList<Song>();
+
+				for (Iterator<Integer> e = chosenItems.iterator(); e.hasNext();) { toDelete.add (songs.get(e.next())); }
+				songs.removeAll(toDelete);
+
+				adapter.clearChoices();
+				//ListAdapter.Dispose ();
+				setListAdapter(new SongListAdapter (getActivity(), dp.getSongs()));
+
+				actionModePosition = -1;
+
+				mode.finish();
+
+				//Toast.MakeText(Activity, String.Format("{0} deleted.", song.Title), ToastLength.Short).Show();
+
+				return true;
+			}
+			return false;
+		}
+
+	};
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -71,13 +145,15 @@ public class SongListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new SongListAdapter(this.getActivity(), dp.getSongs()));
+        mAdapter = new SongListAdapter(this.getActivity(), dp.getSongs());
+        setListAdapter(mAdapter);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        
+        getListView().setOnItemLongClickListener(this);
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -109,6 +185,15 @@ public class SongListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+        
+        SongListAdapter mAdapter = (SongListAdapter) getListView().getAdapter();
+        
+        mAdapter.setOpenedItem(position);
+		mAdapter.clearChoices();
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
+		mAdapter.notifyDataSetChanged();
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
@@ -145,4 +230,31 @@ public class SongListFragment extends ListFragment {
 
         mActivatedPosition = position;
     }
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		SongListAdapter mAdapter = (SongListAdapter) getListView().getAdapter();
+		mAdapter.toggleItem(position);
+		updateActionMode();
+		return true;
+	}
+	
+	private void updateActionMode() {
+		/*
+		 * Start the action mode if it isn't already started
+		 */
+		if (mActionMode == null) {
+			mActionMode = getListView().startActionMode(actionModeCallback);
+		}
+		
+		actionModePosition = 1;
+
+		/*
+		 * Update the title of the CAB to indicate number of items chosen
+		 */
+		mActionMode.setTitle(String.format("%d chosen",
+				mAdapter.getChosenItemsCount()));
+		mAdapter.notifyDataSetChanged();
+	}
 }
